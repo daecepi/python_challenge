@@ -20,3 +20,4 @@ __Note:__ Since the evaluators can be anyone inside the company the documentatio
 
 ## Approaches
 - Modularizing the code as much as possible according to requerements actual understanding
+- Mathematics
