@@ -15,16 +15,32 @@ TOP_LEFT_POINT = 5
 BOTTOM_RIGHT_POINT = 6
 TOP_RIGHT_POINT = 7
 
+
 '''
 Main functionality that contains the application's main funtional requirement
+    @Param {list} board_size: list with x lenght and y lenght of the board (being first x)
+    @Param {list} queen_pos: with the position of the queen
+    @Param {list(list)} obstacles: the array that contains in the board
+    @returns {int} with the number of paths to takes
 '''
 def queen_calculation(board_size, queen_pos, obstacles):
     #Catching base escenarios
+    if board_size == [0,0]:
+        return 0
+    elif board_size == [1,1]:
+        return 1
 
     #Get closest obstacles in all directions
     closest_obstacles = get_first_obstacles(board_size,queen_pos,obstacles)
 
+    numberOfMoves = 0
 
+    #Counting the moves in eight directions
+    for obstacle in closest_obstacles:
+        distance = movesBetweenTwoPoint(obstacle[X], obstacle[Y], queen_pos[X], queen_pos[Y])
+        numberOfMoves = numberOfMoves + distance
+
+    return numberOfMoves
 
 '''
 Function that filters only the closest obstacles of the eight paths (if part of a library by now is recommended to be private)
@@ -92,31 +108,26 @@ def get_first_obstacles(limits, queen, obstacles):
             #Clasifing the diagonal where the point is located
             if obstacle[X] < queen[X]: 
                 if obstacle[Y] < queen[Y]:# Bottom left
-                    x_differences = queen[X] - obstacle[X]
-                    y_differences = queen[Y] - obstacle[Y]
-                    distance = math.sqrt(math.pow(x_differences,2)+math.pow(y_differences,2))
+                    distance = movesBetweenTwoPoint(obstacle[X], obstacle[Y], queen[X], queen[Y])
                     if distance < best_b_l:
                         best_b_l = distance
                         closest_obstacles[BOTTOM_LEFT_POINT] = obstacle
+
                 elif obstacle[Y] > queen[Y]: #Top left
-                    x_differences = queen[X] - obstacle[X]
-                    y_differences = queen[Y] - obstacle[Y]
-                    distance = math.sqrt(math.pow(x_differences,2)+math.pow(y_differences,2))
+                    distance = movesBetweenTwoPoint(obstacle[X], obstacle[Y], queen[X], queen[Y])
                     if distance < best_t_l:
                         best_t_l = distance
                         closest_obstacles[TOP_LEFT_POINT] = obstacle
+
             elif obstacle[X] > queen[X]:
                 if obstacle[Y] < queen[Y]: # Bottom right
-                    x_differences = queen[X] - obstacle[X]
-                    y_differences = queen[Y] - obstacle[Y]
-                    distance = math.sqrt(math.pow(x_differences,2)+math.pow(y_differences,2))
+                    distance = movesBetweenTwoPoint(obstacle[X], obstacle[Y], queen[X], queen[Y])
                     if distance < best_b_r:
                         best_b_r = distance
                         closest_obstacles[BOTTOM_RIGHT_POINT] = obstacle
+
                 elif obstacle[Y] > queen[Y]: # Top right
-                    x_differences = queen[X] - obstacle[X]
-                    y_differences = queen[Y] - obstacle[Y]
-                    distance = math.sqrt(math.pow(x_differences,2)+math.pow(y_differences,2))
+                    distance = movesBetweenTwoPoint(obstacle[X], obstacle[Y], queen[X], queen[Y])
                     if distance < best_t_r:
                         best_t_r = distance
                         closest_obstacles[TOP_RIGHT_POINT] = obstacle
@@ -125,6 +136,14 @@ def get_first_obstacles(limits, queen, obstacles):
     #retuning the obstacle
     return closest_obstacles
     
+'''
+Makes use of the 
+'''
+def movesBetweenTwoPoint(x1, y1, x2, y2):
+    x_differences = x2 - x1
+    y_differences = y2 - y1
+    distance = math.sqrt(math.pow(x_differences,2)+math.pow(y_differences,2))
+    return distance
 
 '''
 Modularizing the reading of the file since the responsability of reading the file
