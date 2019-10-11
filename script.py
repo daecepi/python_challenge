@@ -1,17 +1,37 @@
 import math
 
 '''
+MODULE CONSTANTS: NECESSARY IF EXPORTING FUNCTIONALITIES
+'''
+X = 0
+Y = 1
+
+TOP_POINT = 0
+BOTTOM_POINT = 1
+RIGHT_POINT = 2
+LEFT_POINT = 3
+BOTTOM_LEFT_POINT = 4
+TOP_LEFT_POINT = 5
+BOTTOM_RIGHT_POINT = 6
+TOP_RIGHT_POINT = 7
+
+'''
 Main functionality that contains the application's main funtional requirement
 '''
 def queen_calculation(board_size, queen_pos, obstacles):
+    #Catching base escenarios
 
-
-    #Get all the obstacle
+    #Get closest obstacles in all directions
     closest_obstacles = get_first_obstacles(board_size,queen_pos,obstacles)
 
+
+
 '''
-Function that filters only the closest obstacles of the eight paths
-    @Param {list(tuples)}  obstacles: the array that contains the 
+Function that filters only the closest obstacles of the eight paths (if part of a library by now is recommended to be private)
+    @Param {list} limits: list with x lenght and y lenght of the board (being first x)
+    @Param {list} queen: with the position of the queen
+    @Param {list(list)} obstacles: the array that contains in the board 
+    @Returns {list(list)} that contains the closest obstacles i the 8 directions thus the ones that limit her
 '''
 def get_first_obstacles(limits, queen, obstacles):
     obstacles_copy = obstacles.copy()
@@ -26,28 +46,28 @@ def get_first_obstacles(limits, queen, obstacles):
 
     #Get closest obstacles in the cross (the cross ones)
     for obstacle in obstacles:
-        if obstacle[0] == queen[0]:# this obstacle is at the right of the queen
-            if bestTop >= obstacle[1]:# verifing that this obstacle is even closer to the queen
-                bestTop = obstacle[1]
-                closest_obstacles[0] = obstacle
+        if obstacle[X] == queen[X]:# this obstacle is at the right of the queen
+            if bestTop >= obstacle[Y]:# verifing that this obstacle is even closer to the queen
+                bestTop = obstacle[Y]
+                closest_obstacles[TOP_POINT] = obstacle
             obstacles_copy.remove(obstacle)# Taking out positions in the cross
         
-        elif obstacle[0] == queen[0]:# this obstacle is at the left of the queen
-            if bestBottom <= obstacle[1]:# verifing that this obstacle is even closer to the queen
-                bestBottom = obstacle[1]
-                closest_obstacles[1] = obstacle
+        elif obstacle[X] == queen[X]:# this obstacle is at the left of the queen
+            if bestBottom <= obstacle[Y]:# verifing that this obstacle is even closer to the queen
+                bestBottom = obstacle[Y]
+                closest_obstacles[BOTTOM_POINT] = obstacle
             obstacles_copy.remove(obstacle)# Taking out positions in the cross
 
-        elif obstacle[1] == queen[1]:# this obstacle is down the queen
-            if bestRight >= obstacle[0]:# verifing that this obstacle is even closer to the queen
-                bestRight = obstacle[0]
-                closest_obstacles[2] = obstacle
+        elif obstacle[Y] == queen[Y]:# this obstacle is down the queen
+            if bestRight >= obstacle[X]:# verifing that this obstacle is even closer to the queen
+                bestRight = obstacle[X]
+                closest_obstacles[RIGHT_POINT] = obstacle
             obstacles_copy.remove(obstacle)# Taking out positions in the cross
 
-        elif obstacle[1] == queen[1]:# this obstacle is  of the queen
-            if bestLeft <= obstacle[0]:# verifing that this obstacle is even closer to the queen
-                bestLeft = obstacle[0]
-                closest_obstacles[3] = obstacle
+        elif obstacle[Y] == queen[Y]:# this obstacle is  of the queen
+            if bestLeft <= obstacle[X]:# verifing that this obstacle is even closer to the queen
+                bestLeft = obstacle[X]
+                closest_obstacles[LEFT_POINT] = obstacle
             obstacles_copy.remove(obstacle)# Taking out positions in the cross
     
     #Get closest obstacles in the diagonals
@@ -64,39 +84,45 @@ def get_first_obstacles(limits, queen, obstacles):
         If you treat the ramaining point as points in a 2D math space and calculate the slope
         of the straight line formed by the queen and a obstacle and obtain 1.0/-1.0 as the slope
         the obstacle is in its diagonal, resuming a math function can make sure of the diagonal
-
-        On top of that calculating the size of the vector you can find the closest
     '''
     
     for obstacle in obstacles_copy:
-        print(((queen[1]-obstacle[1])/(queen[0]-obstacle[0])))
-        if  abs((queen[1]-obstacle[1])/(queen[0]-obstacle[0])) == 1.0: #Making sure only the points in the diagonal pass
+        print(((queen[Y]-obstacle[Y])/(queen[X]-obstacle[X])))
+        if  abs((queen[Y]-obstacle[Y])/(queen[X]-obstacle[X])) == 1.0: #Making sure only the points in the diagonal pass
             #Clasifing the diagonal where the point is located
-            if obstacle[0] < queen[0]: 
-                if obstacle[1] < queen[1]:# bottom left
-                    x_differences = queen[0]
-                    y_differences = queen[1]
+            if obstacle[X] < queen[X]: 
+                if obstacle[Y] < queen[Y]:# Bottom left
+                    x_differences = queen[X] - obstacle[X]
+                    y_differences = queen[Y] - obstacle[Y]
                     distance = math.sqrt(math.pow(x_differences,2)+math.pow(y_differences,2))
                     if distance < best_b_l:
                         best_b_l = distance
-                elif obstacle[1] > queen[1]:
-                    x_differences = queen[0]
-                    y_differences = queen[1]
-                    math.sqrt(math.pow(x_differences,2)+math.pow(y_differences,2))
-            elif obstacle[0] > queen[0]:
-                if obstacle[1] < queen[1]:
-                    x_differences = queen[0]
-                    y_differences = queen[1]
-                    math.sqrt(math.pow(x_differences,2)+math.pow(y_differences,2))
-                elif obstacle[1] > queen[1]:
-                    x_differences = queen[0]
-                    y_differences = queen[1]
-                    math.sqrt(math.pow(x_differences,2)+math.pow(y_differences,2))
+                        closest_obstacles[BOTTOM_LEFT_POINT] = obstacle
+                elif obstacle[Y] > queen[Y]: #Top left
+                    x_differences = queen[X] - obstacle[X]
+                    y_differences = queen[Y] - obstacle[Y]
+                    distance = math.sqrt(math.pow(x_differences,2)+math.pow(y_differences,2))
+                    if distance < best_t_l:
+                        best_t_l = distance
+                        closest_obstacles[TOP_LEFT_POINT] = obstacle
+            elif obstacle[X] > queen[X]:
+                if obstacle[Y] < queen[Y]: # Bottom right
+                    x_differences = queen[X] - obstacle[X]
+                    y_differences = queen[Y] - obstacle[Y]
+                    distance = math.sqrt(math.pow(x_differences,2)+math.pow(y_differences,2))
+                    if distance < best_b_r:
+                        best_b_r = distance
+                        closest_obstacles[BOTTOM_RIGHT_POINT] = obstacle
+                elif obstacle[Y] > queen[Y]: # Top right
+                    x_differences = queen[X] - obstacle[X]
+                    y_differences = queen[Y] - obstacle[Y]
+                    distance = math.sqrt(math.pow(x_differences,2)+math.pow(y_differences,2))
+                    if distance < best_t_r:
+                        best_t_r = distance
+                        closest_obstacles[TOP_RIGHT_POINT] = obstacle
 
+    print(closest_obstacles)
     #retuning the obstacle
-    print()
-    print(math.pow(4,2))
-
     return closest_obstacles
     
 
