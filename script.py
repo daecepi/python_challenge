@@ -171,4 +171,6 @@ if __name__ == "__main__" :
     inputs = get_file_inputs_for_analisis()
 
     #Calling the main algorithm and passing the right proportions
-    queen_calculation(inputs[0], inputs[1], inputs[2:])
+    result = queen_calculation(inputs[0], inputs[1], inputs[2:])
+
+    print(result)
