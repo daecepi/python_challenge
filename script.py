@@ -35,7 +35,6 @@ def queen_calculation(board_size, queen_pos, obstacles):
 
     numberOfMoves = 0
 
-    print(closest_obstacles)
     #Counting the moves in eight directions
     for obstacle in closest_obstacles:
         if len(obstacle) == 2:
@@ -133,13 +132,9 @@ def get_first_obstacles(limits, queen, obstacles):
 Makes use of the 
 '''
 def movesBetweenTwoPoint(x1, y1, x2, y2):
-    print(x1,y1)
     x_differences = x2 - x1
-    print(x_differences)
     y_differences = y2 - y1
-    print(y_differences)
     distance = max(abs(x_differences), abs(y_differences))
-    print(distance)
     return distance
 
 '''
