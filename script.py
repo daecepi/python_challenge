@@ -35,10 +35,12 @@ def queen_calculation(board_size, queen_pos, obstacles):
 
     numberOfMoves = 0
 
+    print(closest_obstacles)
     #Counting the moves in eight directions
     for obstacle in closest_obstacles:
-        distance = movesBetweenTwoPoint(obstacle[X], obstacle[Y], queen_pos[X], queen_pos[Y])
-        numberOfMoves = numberOfMoves + distance
+        if len(obstacle) == 2:
+            distance = movesBetweenTwoPoint(obstacle[X], obstacle[Y], queen_pos[X], queen_pos[Y])
+            numberOfMoves = numberOfMoves + distance
 
     return numberOfMoves
 
@@ -63,34 +65,27 @@ def get_first_obstacles(limits, queen, obstacles):
     #Get closest obstacles in the cross (the cross ones)
     for obstacle in obstacles:
         if obstacle[X] == queen[X]:# this obstacle is at the right of the queen
-            if bestTop >= obstacle[Y]:# verifing that this obstacle is even closer to the queen
+            if bestTop >= obstacle[Y] and queen[Y] < obstacle[Y]:# verifing that this obstacle is even closer to the queen by the top
                 bestTop = obstacle[Y]
                 closest_obstacles[TOP_POINT] = obstacle
-            obstacles_copy.remove(obstacle)# Taking out positions in the cross
-        
-        elif obstacle[X] == queen[X]:# this obstacle is at the left of the queen
-            if bestBottom <= obstacle[Y]:# verifing that this obstacle is even closer to the queen
+            
+            elif bestBottom <= obstacle[Y] and queen[Y] > obstacle[Y]:# verifing that this obstacle is even closer to the queen by the bottom
                 bestBottom = obstacle[Y]
                 closest_obstacles[BOTTOM_POINT] = obstacle
+            
             obstacles_copy.remove(obstacle)# Taking out positions in the cross
 
-        elif obstacle[Y] == queen[Y]:# this obstacle is down the queen
-            if bestRight >= obstacle[X]:# verifing that this obstacle is even closer to the queen
+        elif obstacle[Y] == queen[Y]:# verifing Y values are the same
+            if bestRight >= obstacle[X] and queen[X] < obstacle[X]:# verifing that this obstacle is even closer to the queen by the right
                 bestRight = obstacle[X]
                 closest_obstacles[RIGHT_POINT] = obstacle
-            obstacles_copy.remove(obstacle)# Taking out positions in the cross
 
-        elif obstacle[Y] == queen[Y]:# this obstacle is  of the queen
-            if bestLeft <= obstacle[X]:# verifing that this obstacle is even closer to the queen
+            elif bestLeft <= obstacle[X] and queen[X] > obstacle[X]:# verifing that this obstacle is even closer to the queen by the left
                 bestLeft = obstacle[X]
                 closest_obstacles[LEFT_POINT] = obstacle
             obstacles_copy.remove(obstacle)# Taking out positions in the cross
     
     #Get closest obstacles in the diagonals
-    print(obstacles_copy)
-    print(closest_obstacles)
-
-
     best_t_r = max(limits); #Best of top right (max is the maximun limit thus maximun distance possible from points)
     best_t_l = max(limits); #Best of top left (max is the maximun limit thus maximun distance possible from points)
     best_b_r = max(limits); #Best of bottom right (max is the maximun limit thus maximun distance possible from points)
@@ -103,7 +98,6 @@ def get_first_obstacles(limits, queen, obstacles):
     '''
     
     for obstacle in obstacles_copy:
-        print(((queen[Y]-obstacle[Y])/(queen[X]-obstacle[X])))
         if  abs((queen[Y]-obstacle[Y])/(queen[X]-obstacle[X])) == 1.0: #Making sure only the points in the diagonal pass
             #Clasifing the diagonal where the point is located
             if obstacle[X] < queen[X]: 
@@ -132,7 +126,6 @@ def get_first_obstacles(limits, queen, obstacles):
                         best_t_r = distance
                         closest_obstacles[TOP_RIGHT_POINT] = obstacle
 
-    print(closest_obstacles)
     #retuning the obstacle
     return closest_obstacles
     
@@ -140,9 +133,13 @@ def get_first_obstacles(limits, queen, obstacles):
 Makes use of the 
 '''
 def movesBetweenTwoPoint(x1, y1, x2, y2):
+    print(x1,y1)
     x_differences = x2 - x1
+    print(x_differences)
     y_differences = y2 - y1
-    distance = math.sqrt(math.pow(x_differences,2)+math.pow(y_differences,2))
+    print(y_differences)
+    distance = max(abs(x_differences), abs(y_differences))
+    print(distance)
     return distance
 
 '''
