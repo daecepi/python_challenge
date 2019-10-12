@@ -6,7 +6,6 @@ __Note:__ Since the evaluators can be anyone inside the company the documentatio
 ## Approaches
 - Modularizing the code as much as possible according to requerement's actual understanding
 - Mathematics for point mapping instead of constant looping
-- Usage of 
 
 # Prerequisites
 - Having python installed
