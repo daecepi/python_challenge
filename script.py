@@ -28,7 +28,7 @@ def queen_calculation(board_size, queen_pos, obstacles):
     if board_size == [0,0]:
         return 0
     elif board_size == [1,1]:
-        return 1
+        return 1 # According to my logic this should also be zero, but the email of the exercise says it should be one
 
     #Get closest obstacles in all directions
     closest_obstacles = get_first_obstacles(board_size,queen_pos,obstacles)
